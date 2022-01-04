@@ -6,22 +6,21 @@ using UnityEngine;
 
 class MinHeap
 {
-	List<AStarNode> data = new List<AStarNode>();
-
+	List<AStarNode> _data = new List<AStarNode>();
 
 	public int size()
     {
-		return (int)(data.Count);
+		return (int)(_data.Count);
 	}
 
 	public void enqueue(AStarNode element)
 	{
-		int current_node = (int)(data.Count);
+		int current_node = (int)(_data.Count);
 		int parent_node = get_parent_index(current_node);
-		data.Add(element);
+		_data.Add(element);
 		
 		while (!Equals(current_node, parent_node) && 
-			data[current_node].nodeDistanceToStart < data[parent_node].nodeDistanceToStart)
+			_data[current_node].nodeDistanceToStart < _data[parent_node].nodeDistanceToStart)
 		{
 			swap(current_node, parent_node);
 			current_node = parent_node;
@@ -30,14 +29,14 @@ class MinHeap
 	}
 	public AStarNode get_top()
 	{
-		return data[0];
+		return _data[0];
 	}
 
 	public AStarNode dequeue()
 	{
-		AStarNode return_value = data[0];
-		swap(0, (int)(data.Count - 1));
-		data.RemoveAt((data.Count - 1));
+		AStarNode return_value = _data[0];
+		swap(0, (int)(_data.Count - 1));
+		_data.RemoveAt((_data.Count - 1));
 		move_down(0);
 
 		return return_value;
@@ -59,25 +58,25 @@ class MinHeap
 
 	public void swap(int index, int another_index)
 	{
-		AStarNode temp_index = data[index];
-		data[index] = data[another_index];
-		data[another_index] = temp_index;
+		AStarNode temp_index = _data[index];
+		_data[index] = _data[another_index];
+		_data[another_index] = temp_index;
 	}
 
 	public void move_down(int first)
 	{
 		int smallest = get_left_child_index(first);
-		int last = (int)(data.Count - 1);
+		int last = (int)(_data.Count - 1);
 		while (smallest <= last)
 		{
-			if (smallest < last && data[smallest + 1].nodeDistanceToStart < data[smallest].nodeDistanceToStart)
+			if (smallest < last && _data[smallest + 1].nodeDistanceToStart < _data[smallest].nodeDistanceToStart)
 			{
 				++smallest;
 			}
 
-			if ((data[smallest].nodeDistanceToStart < data[first].nodeDistanceToStart) || 
-				(!(data[smallest].nodeDistanceToStart < data[first].nodeDistanceToStart) && 
-				(!(data[first].nodeDistanceToStart < data[smallest].nodeDistanceToStart))))
+			if ((_data[smallest].nodeDistanceToStart < _data[first].nodeDistanceToStart) || 
+				(!(_data[smallest].nodeDistanceToStart < _data[first].nodeDistanceToStart) && 
+				(!(_data[first].nodeDistanceToStart < _data[smallest].nodeDistanceToStart))))
 			{
 				swap(first, smallest);
 				first = smallest;

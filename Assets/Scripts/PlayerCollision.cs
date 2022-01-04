@@ -6,6 +6,10 @@ public class PlayerCollision : MonoBehaviour
 {
     GridHandler _gridHandler;
 
+    string _borderTag = "Border";
+    string _enemyTag = "Enemy";
+    string _tailTag = "Tail";
+
     private void Start()
     {
         _gridHandler = GetComponentInParent<GridHandler>();
@@ -14,38 +18,14 @@ public class PlayerCollision : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         PlayerController playerController = gameObject.GetComponentInParent<PlayerController>();
-        if(other.tag == "Border" && playerController != null)
+        if(other.tag == _borderTag && playerController != null)
         {
-            TeleportPlayer();
+            _gridHandler.TeleportPlayer(gameObject);
         }        
-        else if((other.tag == "Enemy" || other.tag == "Tail") && playerController != null)
+        else if((other.tag == _enemyTag || other.tag == _tailTag) && playerController != null)
         {
             playerController.PlayerIsDead = true;
         }
     }
 
-    void TeleportPlayer()
-    {
-        Vector3Int newPosition = new Vector3Int(0, 0, -1);
-        newPosition.x = (int)gameObject.transform.position.x;
-        newPosition.y = (int)gameObject.transform.position.y;
-
-        if (newPosition.x < 0)
-        {
-            newPosition.x += _gridHandler.GetGridSize;
-        }
-        else if(newPosition.x >= _gridHandler.GetGridSize)
-        {
-            newPosition.x -= _gridHandler.GetGridSize;
-        }
-        else if (newPosition.y < 0)
-        {
-            newPosition.y += _gridHandler.GetGridSize;
-        }
-        else if (newPosition.y >= _gridHandler.GetGridSize)
-        {
-            newPosition.y -= _gridHandler.GetGridSize;
-        }
-        gameObject.transform.position = newPosition;
-    }
 }

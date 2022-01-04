@@ -114,27 +114,28 @@ public class PlayerController : MonoBehaviour
         _formerPosition = node._data.transform.position;
         Vector3 newPosition = node._data.transform.position;
         newPosition.z = -1;
+        int tileSize = _gridHandler.GetTileSize;
 
         switch (_currentKeyDown)
         {
             case CurrentKeyDown.Up:
                 {
-                    newPosition.y += 1;
+                    newPosition.y += tileSize;
                     break;
                 }
             case CurrentKeyDown.Left:
                 {
-                    newPosition.x -= 1;
+                    newPosition.x -= tileSize;
                     break;
                 }
             case CurrentKeyDown.Right:
                 {
-                    newPosition.x += 1;
+                    newPosition.x += tileSize;
                     break;
                 }
             case CurrentKeyDown.Down:
                 {
-                    newPosition.y -= 1;
+                    newPosition.y -= tileSize;
                     break;
                 }
             default:

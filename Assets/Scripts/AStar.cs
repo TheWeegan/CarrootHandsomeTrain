@@ -41,17 +41,17 @@ public class AStarNode
 
 public class AStar
 {
-    GameObject[,] _grid;
     GameObject[] _1Dgrid;
     int[,] _gridIDs;
 
     int _gridSize;
+    int _tileSize;
     bool _playerAtNode = false;
 
-    public GameObject[,] SetGrid { set { _grid = value;  } }
     public GameObject[] Set1DGrid { set { _1Dgrid = value;  } }
     public int[,] SetGridIDs { set { _gridIDs = value;  } }
     public int SetGridSize { set { _gridSize = value;  } }
+    public int SetTileSize { set { _tileSize = value;  } }
 
 
     public SinglyLinkedList _singlyLinkedList;
@@ -103,8 +103,6 @@ public class AStar
                 continue;
             }
 
-
-
             if (currentNode.nodeId == endIndex)
             {
                 return GetFinalPath(visitedNodes, startIndex);
@@ -140,16 +138,16 @@ public class AStar
         currentTile.x = (int)_1Dgrid[aStarNode.nodeId].transform.position.x;
         currentTile.y = (int)_1Dgrid[aStarNode.nodeId].transform.position.y;
 
-        neighborPositions[0] = new Vector2Int(currentTile.x - 1, currentTile.y + 1);
-        neighborPositions[1] = new Vector2Int(currentTile.x, currentTile.y + 1);
-        neighborPositions[2] = new Vector2Int(currentTile.x + 1, currentTile.y + 1);
+        neighborPositions[0] = new Vector2Int(currentTile.x - _tileSize, currentTile.y + _tileSize);
+        neighborPositions[1] = new Vector2Int(currentTile.x, currentTile.y + _tileSize);
+        neighborPositions[2] = new Vector2Int(currentTile.x + _tileSize, currentTile.y + _tileSize);
 
-        neighborPositions[3] = new Vector2Int(currentTile.x - 1, currentTile.y);
-        neighborPositions[4] = new Vector2Int(currentTile.x + 1, currentTile.y);
+        neighborPositions[3] = new Vector2Int(currentTile.x - _tileSize, currentTile.y);
+        neighborPositions[4] = new Vector2Int(currentTile.x + _tileSize, currentTile.y);
         
-        neighborPositions[5] = new Vector2Int(currentTile.x - 1, currentTile.y - 1);
-        neighborPositions[6] = new Vector2Int(currentTile.x, currentTile.y - 1);
-        neighborPositions[7] = new Vector2Int(currentTile.x + 1, currentTile.y - 1);
+        neighborPositions[5] = new Vector2Int(currentTile.x - _tileSize, currentTile.y - _tileSize);
+        neighborPositions[6] = new Vector2Int(currentTile.x, currentTile.y - _tileSize);
+        neighborPositions[7] = new Vector2Int(currentTile.x + _tileSize, currentTile.y - _tileSize);
 
         for (int i = 0; i < neighborPositions.Length; i++)
         {

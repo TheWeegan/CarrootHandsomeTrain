@@ -7,29 +7,21 @@ public class GridHandler : MonoBehaviour
     [SerializeField] GameObject _gridTile;
     [SerializeField] GameObject _borderPiece;
     [SerializeField] int _gridSize = 10;
+    [SerializeField] int _tileSize = 1;
 
     List<GameObject> _border;
 
     GameObject[,] _grid;
-
     GameObject[] _1Dgrid;
 
     int[,] _gridIDs;
 
+    public GameObject[] Get1DGrid { get { return _1Dgrid; } }
+    public GameObject[,] GetGrid { get { return _grid; } }
+    public int[,] GetGridIDs { get { return _gridIDs; } }
     public int GetGridSize { get { return _gridSize; } }
+    public int GetTileSize { get { return _tileSize; } }
 
-    public GameObject[] Get1DGrid()
-    {
-        return _1Dgrid;
-    }
-    public GameObject[,] GetGrid()
-    {
-        return _grid;
-    }
-    public int[,] GetGridIDs()
-    {
-        return _gridIDs;
-    }
     public int GetGridID(int x, int y)
     {
         return _gridIDs[x, y];
@@ -72,12 +64,12 @@ public class GridHandler : MonoBehaviour
         _borderPiece.transform.position = piecePosition;
 
         int index = 0;
-        int borderOffset = 1;
+        int borderOffset = _tileSize;
 
-        int borderSizeY = (_grid.GetLength(1) * 2) + 1;
+        int borderSizeY = (_grid.GetLength(1) * 2) + _tileSize;
         for (; index < borderSizeY; index++)
         {
-            piecePosition.y += 1;
+            piecePosition.y += _tileSize;
             _border.Add(Instantiate(_borderPiece));
             _border[index].transform.position = piecePosition;
             if(index == _grid.GetLength(1) - borderOffset)
@@ -87,8 +79,8 @@ public class GridHandler : MonoBehaviour
             }
         }
 
-        int borderSizeX = (_grid.GetLength(0) * 2) + 2;
-        piecePosition.x -= _grid.GetLength(0) + 2;
+        int borderSizeX = (_grid.GetLength(0) * 2) + _tileSize * 2;
+        piecePosition.x -= _grid.GetLength(0) + _tileSize * 2;
 
         for (int i = 0; i < borderSizeX; i++)
         {
@@ -103,5 +95,31 @@ public class GridHandler : MonoBehaviour
             }
             index++;
         }
+    }
+
+    public void TeleportPlayer(GameObject playerGameObject)
+    {
+        Vector3Int newPosition = new Vector3Int(0, 0, -1);
+        newPosition.x = (int)playerGameObject.transform.position.x;
+        newPosition.y = (int)playerGameObject.transform.position.y;
+
+        if (newPosition.x < 0)
+        {
+            newPosition.x += _gridSize;
+        }
+        else if (newPosition.x >= _gridSize)
+        {
+            newPosition.x -= _gridSize;
+        }
+        else if (newPosition.y < 0)
+        {
+            newPosition.y += _gridSize;
+        }
+        else if (newPosition.y >= _gridSize)
+        {
+            newPosition.y -= _gridSize;
+        }
+        playerGameObject.transform.position = newPosition;
+
     }
 }

@@ -21,13 +21,6 @@ public class OrangeController : MonoBehaviour
         SpawnOrange();
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
-
-
     private void OnTriggerEnter(Collider other)
     {
         PlayerController playerController = other.GetComponentInParent<PlayerController>();

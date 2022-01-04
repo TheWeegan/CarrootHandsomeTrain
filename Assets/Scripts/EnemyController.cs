@@ -5,10 +5,11 @@ using UnityEngine;
 public class EnemyController : MonoBehaviour
 {
     [SerializeField] GameObject _head;
-
     [SerializeField] GameObject _enemy;
+
     GridHandler _gridHandler;
 
+    int _tileSize;
     int _startIndex = -1;
     int _endIndex = -1;
 
@@ -21,14 +22,14 @@ public class EnemyController : MonoBehaviour
     {
         _gridHandler = GetComponentInParent<GridHandler>();
         _playerController = GetComponent<PlayerController>();
+        _tileSize = _gridHandler.GetTileSize;
 
         SpawnEnemy();
         _aStarPath = new AStar();
-        _aStarPath.SetGrid = _gridHandler.GetGrid();
-        _aStarPath.Set1DGrid = _gridHandler.Get1DGrid();
-        _aStarPath.SetGridIDs = _gridHandler.GetGridIDs();
+        _aStarPath.Set1DGrid = _gridHandler.Get1DGrid;
+        _aStarPath.SetGridIDs = _gridHandler.GetGridIDs;
         _aStarPath.SetGridSize = _gridHandler.GetGridSize;
-
+        _aStarPath.SetTileSize = _tileSize;
         _aStarPath._singlyLinkedList = _playerController.GetLinkedList;
     }
 
@@ -38,14 +39,6 @@ public class EnemyController : MonoBehaviour
         HandleMovement();
     }
 
-    private void OnTriggerEnter(Collider other)
-    {
-        if(other.tag == "Tail")
-        {
-
-        }
-    }
-
     private void SpawnEnemy()
     {
         Vector3Int newPosition = new Vector3Int(Random.Range(1, _gridHandler.GetGridSize - 2), Random.Range(1, _gridHandler.GetGridSize - 2), -1);
@@ -53,7 +46,7 @@ public class EnemyController : MonoBehaviour
 
         while(newPosition == playerIntPosition)
         {
-            newPosition = new Vector3Int(Random.Range(1, _gridHandler.GetGridSize -2), Random.Range(1, _gridHandler.GetGridSize - 2), -1);
+            newPosition = new Vector3Int(Random.Range(1, _gridHandler.GetGridSize - 2), Random.Range(1, _gridHandler.GetGridSize - 2), -1);
         }
         _enemy.gameObject.transform.position = newPosition;        
     }
@@ -63,12 +56,12 @@ public class EnemyController : MonoBehaviour
         if(_playerController.MovementTimer <= 0)
         {
             Vector2Int enemyPosition = new Vector2Int((int)_enemy.transform.position.x, (int)_enemy.transform.position.y);
-            Vector2Int endPos = new Vector2Int((int)_head.transform.position.x, (int)_head.transform.position.y);
+            Vector2Int endPosition = new Vector2Int((int)_head.transform.position.x, (int)_head.transform.position.y);
 
-            if (InBorders(enemyPosition, endPos))
+            if (InBorders(enemyPosition, endPosition))
             {
                 _startIndex = _gridHandler.GetGridID(enemyPosition.x, enemyPosition.y);
-                _endIndex = _gridHandler.GetGridID(endPos.x, endPos.y);
+                _endIndex = _gridHandler.GetGridID(endPosition.x, endPosition.y);
                 _newPath = _aStarPath.AStarPath(_startIndex, _endIndex);
                 if(_newPath == null)
                 {
@@ -81,8 +74,8 @@ public class EnemyController : MonoBehaviour
                 {
                     if(enemyPosition.x == _newPath[i].x && enemyPosition.y == _newPath[i].y)
                     {
-                        enemyPosition.x = _newPath[i + 1].x;
-                        enemyPosition.y = _newPath[i + 1].y;
+                        enemyPosition.x = _newPath[i + _tileSize].x;
+                        enemyPosition.y = _newPath[i + _tileSize].y;
                         Vector3 tempPosition = new Vector3(enemyPosition.x, enemyPosition.y, -1);
                         _enemy.transform.position = tempPosition;
                         break;
